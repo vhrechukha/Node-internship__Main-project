@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/main.css">
+    <title>USERS</title>
+</head>
+<body>
+    <section>
+      <div id="deleteUser">
+        <div class="delete-user-form form-none">
+          <div class="form">
+            <p>Do you really want to delete?</p>
+            <form method="POST" action="/v1/users/delete/?_method=DELETE">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <input type="hidden" name="id"  id="userIdHiddenInputForDelete">
+              <input type="submit" class="button" value="Delete">
+            </form>
+          </div>
+        </div>
+    </div>
+    <div id="updateUser">
+      <div class="update-user-form form-none">
+        <div class="form">
+          <form method="POST" action="/v1/users/update/?_method=PUT">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input class="input-text" type="text" name="fullName" placeholder="fullname">
+            <input type="hidden" name="id" id="userIdHiddenInputForUpdate">
+            <input class="button" type="submit" value="Update">
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="create-user-form form-none">
+      <div class="form">
+        <form method="POST" action="/v1/users/create">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <input class="input-text" type="text" name="fullName" placeholder="fullname">
+          <input class="input-text" type="email" name="email" placeholder="email">
+          <input class="button" type="submit" value="Create">
+        </form>
+      </div>
+    </div>
+    <input class="button" id="createUser" type="submit" value="Create User"> 
+    <p><% if ( error.length > 0 ) { %>
+          <%= error %>
+        <% } %></p>
+    <table class="user-table">
+      <tr>
+        <th>#</th>
+        <th>email</th>
+        <th></th>
+        <th>full name</th>
+        <th></th>
+    </tr>
+    <% data.forEach(function(i, index){ %>
+      <tr class="user"id="<%= i.id %>">
+        <td><%= index %></td>
+        <td class="email"><%= i.email %></td>
+        <td class="td-button">
+          <a href="#updateUser" id="update">update</a>
+        </td>
+        <td class="fullName"><%= i.fullName %></td>
+        <td class="td-button">
+          <a href="#delete" id="delete">delete</a>
+        </td>
+      </tr>
+      <% }); %>
+    </table>
+  </section>
+  <script>
+    document.onclick = function(event) {
+      let t = event.target || event.innerText || textContent; 
+      console.log(t);
+      if (t.id === 'createUser') {
+        document.querySelector('.create-user-form').classList.toggle("form-none");
+      }
+      if (t.id === 'delete') {
+        document.querySelector('#userIdHiddenInputForDelete').value = t.parentNode.parentNode.id;
+        document.querySelector('.delete-user-form').classList.toggle("form-none");
+      }
+      if (t.id === 'update') {
+        document.querySelector('#userIdHiddenInputForUpdate').value = t.parentNode.parentNode.id;
+        document.querySelector('.update-user-form').classList.toggle("form-none");
+      }
+    };
+  </script>
+</body>
+</html>
