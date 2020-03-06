@@ -88,41 +88,33 @@ const grabbingUserData = () => {
     return data;
 };
 
-const saveUserData = (users) => {
+const saveUserData = async (users) => {
     const UserModel = SchemaMongoDb.connectToUserSchema();
     for (const user of users) {
-        UserModel.create(user);
+        await UserModel.create(user);
     }
 };
 
 // Make and save screenshots
 const uploadSchreenshot = (file, time) => {
-    try {
-        // FIX: wrong format for gm
-        /*gm(file)
-            .quality(1)
-            .write(file, function (err) {
-                if (err) console.error(err);
-            });*/
+    // FIX: wrong format for gm
+    /*gm(file)
+        .quality(1)
+        .write(file, function (err) {
+            if (err) console.error(err);
+        });*/
 
-        dbx.filesUpload({ path: `/${time}.png`, contents: file });
-
-    } catch (err) {
-        throw err;
-    }
+    dbx.filesUpload({ path: `/${time}.png`, contents: file });
 };
 
 const saveLinkData = (time) => {
     const LinkModel = SchemaMongoDb.connectToLinkSchema();
 
-    dbx.sharingCreateSharedLink({
+    return dbx.sharingCreateSharedLink({
         path: `/${time}.png`,
     })
         .then((PathLinkMetadata) => {
-            LinkModel.create({ link: PathLinkMetadata.url });
-        })
-        .catch((err) => {
-            console.error(err);
+            return LinkModel.create({ link: PathLinkMetadata.url });
         });
 };
 
