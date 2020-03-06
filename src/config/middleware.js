@@ -4,8 +4,8 @@ const cookieParser = require('cookie-parser');
 const methodOverride = require('method-override');
 const cors = require('cors');
 const helmet = require('helmet');
-const flash = require('req-flash');
 const session = require('express-session');
+const flash = require('req-flash');
 
 module.exports = {
     /**
@@ -49,11 +49,10 @@ module.exports = {
         app.set('views', './src/views');
         app.set('view engine', 'ejs');
         app.use(session({
-            secret: 'keyboard cat',
+            secret: 'zodiac',
             resave: false,
             saveUninitialized: true,
-            cookie: { secure: true }
-          }))
+        }));
         app.use(flash());
     },
 };
