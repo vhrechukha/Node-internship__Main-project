@@ -99,11 +99,11 @@ const saveUserData = (users) => {
 const uploadSchreenshot = (file, time) => {
     try {
         // FIX: wrong format for gm
-        gm(file)
+        /*gm(file)
             .quality(1)
             .write(file, function (err) {
                 if (err) console.error(err);
-            });
+            });*/
 
         dbx.filesUpload({ path: `/${time}.png`, contents: file });
 
@@ -123,28 +123,32 @@ const saveLinkData = (time) => {
         })
         .catch((err) => {
             console.error(err);
-            done();
         });
 };
 
-void (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-  
-    await page.setViewport({ width: 1920, height: 1080 });
-    await page.goto('http://localhost:3000/v1/users');
+(async () => {
+    try {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+    
+        await page.setViewport({ width: 1920, height: 1080 });
+        await page.goto('http://localhost:3000/v1/users');
 
-    // grabbing emails
-    const users = await page.evaluate(grabbingUserData);
-    await saveUserData(users);
+        // grabbing emails
+        const users = await page.evaluate(grabbingUserData);
+        await saveUserData(users);
 
-    // upload screenshot
-    const file = await page.screenshot({ type: 'png' , encoding: 'buffer'});
-    const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    await uploadSchreenshot(file, time);
-    await saveLinkData(time);
+        // upload screenshot
+        const file = await page.screenshot({ type: 'png' , encoding: 'buffer'});
+        const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        await uploadSchreenshot(file, time);
+        await saveLinkData(time);
 
-    await browser.close();
+        await browser.close();
+
+    } catch (err) {
+        console.error(err);
+    }  
 })();
 
     
