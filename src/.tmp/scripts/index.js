@@ -1,4 +1,4 @@
-require('dotenv').config({path: __dirname + '/.env'})
+require('dotenv').config({path: `${__dirname}/.env`})
 const mongoose = require('mongoose');
 const { Schema } = require('mongoose');
 const puppeteer = require('puppeteer');
@@ -105,7 +105,7 @@ const uploadSchreenshot = (file, time) => {
                 if (err) console.error(err);
             });
 
-        dbx.filesUpload({ path: '/' + time + '.png', contents: file });
+        dbx.filesUpload({ path: `/${time}.png`, contents: file });
 
     } catch (err) {
         throw err;
