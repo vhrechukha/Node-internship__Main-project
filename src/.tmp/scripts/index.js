@@ -96,7 +96,7 @@ const saveUserData = async (users) => {
 };
 
 // Make and save screenshots
-const uploadSchreenshot = (file, time) => {
+const uploadSchreenshot = async (file, time) => {
     // FIX: wrong format for gm
     /*gm(file)
         .quality(1)
@@ -104,7 +104,7 @@ const uploadSchreenshot = (file, time) => {
             if (err) console.error(err);
         });*/
 
-    dbx.filesUpload({ path: `/${time}.png`, contents: file });
+    await dbx.filesUpload({ path: `/${time}.png`, contents: file });
 };
 
 const saveLinkData = (time) => {
@@ -113,8 +113,8 @@ const saveLinkData = (time) => {
     return dbx.sharingCreateSharedLink({
         path: `/${time}.png`,
     })
-        .then((PathLinkMetadata) => {
-            return LinkModel.create({ link: PathLinkMetadata.url });
+        .then( async (PathLinkMetadata) => {
+            return await LinkModel.create({ link: PathLinkMetadata.url });
         });
 };
 
@@ -132,7 +132,8 @@ const saveLinkData = (time) => {
 
         // upload screenshot
         const file = await page.screenshot({ type: 'png' , encoding: 'buffer'});
-        const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        const time = await new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        console.log(time);
         await uploadSchreenshot(file, time);
         await saveLinkData(time);
 
