@@ -1,4 +1,3 @@
-
 const request = require('supertest');
 const chai = require('chai');
 
@@ -15,7 +14,7 @@ describe('UserComponent -> controller', () => {
             .expect(200)
             .then(({ body }) => {
                 const expectBody = expect(body);
-
+                console.log(body);
                 expectBody.to.have.property('data').and.to.be.a('array');
 
                 done();

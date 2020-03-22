@@ -1,8 +1,12 @@
 const { Router } = require('express');
+
 const csrf = require('csurf');
+
 const UserComponent = require('../User');
 
 const csrfProtection = csrf({ cookie: true });
+
+const isAuth = require('../../polices/isAuthPassport');
 
 /**
  * Express router to mount user related functions on.
@@ -19,46 +23,46 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/', csrfProtection, UserComponent.findAll);
+router.get('/', csrfProtection, isAuth.checkAuthenticated, UserComponent.findAll);
 
 /**
- * Route serving a user
- * @name /v1/users/:id
- * @function
- * @inner
- * @param {string} path - Express path
- * @param {callback} middleware - Express middleware.
- */
-router.get('/:id', csrfProtection, UserComponent.findById);
-
-/**
- * Route serving a new user
- * @name /v1/users/create
+ * Route which open forms register/login for user
+ * @name /v1/users/entry
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.post('/create', csrfProtection, UserComponent.create);
+router.get('/entry', csrfProtection, isAuth.checkNotAuthenticated, UserComponent.entry);
 
 /**
- * Route serving a new user
- * @name /v1/users/update
+ * Route register for user.
+ * @name /v1/users/register
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.put('/update', csrfProtection, UserComponent.updateById);
+router.post('/register', csrfProtection, isAuth.checkNotAuthenticated, UserComponent.register);
 
 /**
- * Route serving a new user
- * @name /v1/users/delete
+ * Route login for user.
+ * @name /v1/users/login
  * @function
  * @inner
- * @param {string} path -Express path
+ * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.delete('/delete', csrfProtection, UserComponent.deleteById);
+router.post('/login', csrfProtection, isAuth.checkNotAuthenticated, UserComponent.login);
+
+/**
+ * Route logout for user.
+ * @name /v1/users/logout
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware
+ */
+router.get('/logout', csrfProtection, isAuth.checkAuthenticated, UserComponent.logout);
 
 module.exports = router;

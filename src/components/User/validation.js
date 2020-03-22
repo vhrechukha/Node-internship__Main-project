@@ -18,7 +18,7 @@ class UserValidation extends Validation {
                     .objectId(),
                 _csrf: this.Joi
                     .string()
-                    .required()
+                    .required(),
             })
             .validate(data);
     }
@@ -32,17 +32,23 @@ class UserValidation extends Validation {
     create(profile) {
         return this.Joi
             .object({
+                fullName: this.Joi
+                    .string()
+                    .min(1)
+                    .max(30)
+                    .required(),
                 email: this.Joi
                     .string()
-                    .email(),
-                fullName: this.Joi
+                    .email()
+                    .required(),
+                password: this.Joi
                     .string()
                     .min(1)
                     .max(30)
                     .required(),
                 _csrf: this.Joi
                     .string()
-                    .required()
+                    .required(),
             })
             .validate(profile);
     }

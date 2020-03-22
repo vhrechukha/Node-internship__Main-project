@@ -4,8 +4,8 @@ const cookieParser = require('cookie-parser');
 const methodOverride = require('method-override');
 const cors = require('cors');
 const helmet = require('helmet');
+const passport = require('passport');
 const session = require('express-session');
-const flash = require('req-flash');
 
 module.exports = {
     /**
@@ -33,6 +33,17 @@ module.exports = {
         // can be used to enable CORS with various options
         app.use(cors());
         // cors
+        app.use(session({
+            secret: 'keyboard cat',
+            resave: false,
+            saveUninitialized: true,
+            cookie: { secure: false },
+        }));
+        app.use(passport.initialize());
+        app.use(passport.session());
+        require('./passport-config')(passport);
+        // configure passport js
+
         app.use((req, res, next) => {
             res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS ');
             res.header('Access-Control-Allow-Credentials', '*');
@@ -48,11 +59,5 @@ module.exports = {
         // configuration for ejs
         app.set('views', './src/views');
         app.set('view engine', 'ejs');
-        app.use(session({
-            secret: 'zodiac',
-            resave: false,
-            saveUninitialized: true,
-        }));
-        app.use(flash());
     },
 };

@@ -1,9 +1,23 @@
+const passport = require('passport');
 const UserService = require('./service');
 const UserValidation = require('./validation');
 const ValidationError = require('../../error/ValidationError');
 
+
 /**
- * @function
+ * @function entry
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @returns {Promise < void >}
+ */
+function entry(req, res) {
+    return res.render('entry.ejs', {
+        csrfToken: req.csrfToken(),
+    });
+}
+
+/**
+ * @function findAll
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -29,51 +43,13 @@ async function findAll(req, res, next) {
 }
 
 /**
- * @function
+ * @function register
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function findById(req, res, next) {
-    try {
-        const { error } = UserValidation.findById(req.params);
-
-        if (error) {
-            throw new ValidationError(error.details);
-        }
-
-        const user = await UserService.findById(req.params.id);
-
-        return res.status(200).json({
-            data: user,
-            CSRFtoken: req.csrfToken(),
-        });
-    } catch (error) {
-        if (error instanceof ValidationError) {
-            return res.status(422).json({
-                error: error.name,
-                details: error.message,
-            });
-        }
-
-        res.status(500).json({
-            message: error.name,
-            details: error.message,
-        });
-
-        return next(error);
-    }
-}
-
-/**
- * @function
- * @param {express.Request} req
- * @param {express.Response} res
- * @param {express.NextFunction} next
- * @returns {Promise < void >}
- */
-async function create(req, res, next) {
+async function register(req, res, next) {
     try {
         const { error } = UserValidation.create(req.body);
 
@@ -82,47 +58,7 @@ async function create(req, res, next) {
         }
         await UserService.create(req.body);
 
-        return res.redirect('/v1/users');
-    } catch (error) {
-        if (error instanceof ValidationError) {
-            return res.status(422).json({
-                message: error.name,
-                details: error.message,
-            });
-        }
-
-        if (error.name === 'MongoError' && error.code === 11000) {
-            res.render('users', { errormessage: req.flash('deletePostSuccessMsg') });
-            // return res.redirect('/v1/users', req.flash('error', 'Error messoge'));
-        }
-
-        res.status(500).json({
-            message: error.name,
-            details: error.message,
-        });
-
-        return next(error);
-    }
-}
-
-/**
- * @function
- * @param {express.Request} req
- * @param {express.Response} res
- * @param {express.NextFunction} next
- * @returns {Promise<void>}
- */
-async function updateById(req, res, next) {
-    try {
-        const { error } = UserValidation.updateById(req.body);
-
-        if (error) {
-            throw new ValidationError(error.details);
-        }
-
-        await UserService.updateById(req.body.id, req.body);
-
-        return res.redirect('/v1/users');
+        return res.redirect('/v1/users/entry');
     } catch (error) {
         if (error instanceof ValidationError) {
             return res.status(422).json({
@@ -141,31 +77,46 @@ async function updateById(req, res, next) {
 }
 
 /**
- * @function
+ * @function login
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
- * @returns {Promise<void>}
+ * @returns {Promise < void >}
  */
-async function deleteById(req, res, next) {
+async function login(req, res, next) {
     try {
-        const { error } = UserValidation.deleteById(req.body);
-
-        if (error) {
-            throw new ValidationError(error.details);
-        }
-
-        await UserService.deleteById(req.body.id);
-
-        return res.redirect('/v1/users');
+        await passport.authenticate('local', { name: req.body.email, password: req.body.password }, (err, user, info) => {
+            if (err) return next(err);
+            if (user) {
+                // eslint-disable-next-line no-shadow
+                req.logIn(user, (err) => {
+                    if (err) return next(err);
+                    return res.redirect('/v1/users');
+                });
+            }
+        })(req, res, next);
     } catch (error) {
-        if (error instanceof ValidationError) {
-            return res.status(422).json({
-                message: error.name,
-                details: error.message,
-            });
-        }
+        res.status(500).json({
+            message: error.name,
+            details: error.message,
+        });
 
+        return next(error);
+    }
+}
+
+/**
+ * @function logour
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise < void >}
+ */
+async function logout(req, res, next) {
+    try {
+        req.logout();
+        return res.redirect('/v1/users/entry');
+    } catch (error) {
         res.status(500).json({
             message: error.name,
             details: error.message,
@@ -176,9 +127,9 @@ async function deleteById(req, res, next) {
 }
 
 module.exports = {
+    entry,
     findAll,
-    findById,
-    create,
-    updateById,
-    deleteById,
+    register,
+    login,
+    logout,
 };

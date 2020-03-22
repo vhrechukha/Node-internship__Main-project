@@ -1,12 +1,8 @@
 const { Schema } = require('mongoose');
 const { mongoDBConnections } = require('../../config/connection');
 
-const UserSchema = new Schema(
+const StaffSchema = new Schema(
     {
-        fullName: {
-            type: String,
-            trim: true,
-        },
         email: {
             type: String,
             required: true,
@@ -17,9 +13,9 @@ const UserSchema = new Schema(
         },
     },
     {
-        collection: 'usermodel',
+        collection: 'staff',
         versionKey: false,
     },
 );
 
-module.exports = mongoDBConnections.model('UserModel', UserSchema);
+module.exports = mongoDBConnections.model('StaffModel', StaffSchema);

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const redis = require('redis');
 
 const MONGODB_URI = 'mongodb://localhost:27017/';
 const MONGODB_DB_MAIN = 'users_db';
@@ -17,4 +18,10 @@ const connectOptions = {
     useUnifiedTopology: true,
 };
 
-module.exports = mongoose.createConnection(MONGO_URI, connectOptions);
+const mongoDBConnections = mongoose.createConnection(MONGO_URI, connectOptions);
+const redisConnections = redis.createClient();
+
+module.exports = {
+    mongoDBConnections,
+    redisConnections,
+};

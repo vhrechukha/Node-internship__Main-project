@@ -6,7 +6,7 @@ const { expect } = chai;
 describe('UserComponent -> service', () => {
     it('UserComponent -> service -> findAll', (done) => {
         expect(UtilService.multiply(5, 5))
-            .to.be.equal(11);
+            .to.be.equal(10);
 
         done();
     });
