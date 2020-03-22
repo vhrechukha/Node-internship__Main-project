@@ -6,6 +6,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const passport = require('passport');
 const session = require('express-session');
+const express = require('express');
 
 module.exports = {
     /**
@@ -59,5 +60,7 @@ module.exports = {
         // configuration for ejs
         app.set('views', './src/views');
         app.set('view engine', 'ejs');
+        // configuration for static files
+        app.use(express.static(`${__dirname}/../content`));
     },
 };
