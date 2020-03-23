@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
     const jwt = require('jsonwebtoken');
 
     jwt.verify(req.headers.refreshtoken, process.env.SECRETKEY, (error, decoded) => {
-        if (error) res.json({ error });
+        if (error) res.status(406).json({ error });
         if (decoded) next();
     });
 };

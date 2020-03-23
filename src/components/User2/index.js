@@ -23,6 +23,7 @@ async function create(req, res, next) {
 
         return res.status(200).json({
             result: `${user.id} registered.`,
+            status: 'registered',
             data: user,
         });
     } catch (error) {
@@ -68,6 +69,7 @@ async function login(req, res, next) {
 
             return res.status(200).json({
                 result: `${user.id} log in.`,
+                status: 'login',
                 data: user,
                 tokens: {
                     AccessToken: accessToken,
@@ -75,7 +77,10 @@ async function login(req, res, next) {
                 },
             });
         }
-        throw error;
+        return res.status(200).json({
+            result: `${user.id} doesn't log in.`,
+            status: 'notlogin',
+        });
     } catch (error) {
         if (error instanceof ValidationError) {
             return res.status(422).json({

@@ -37,7 +37,7 @@ router.post('/login', UserComponent.login);
  * @param {string} path -Express path
  * @param {callback} middleware - Express middleware
  */
-router.post('/logout', isAuth, UserComponent.logout);
+router.get('/logout', isAuth, UserComponent.logout);
 
 /**
  * Route for continiue session.

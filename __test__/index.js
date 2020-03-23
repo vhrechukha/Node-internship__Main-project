@@ -12,3 +12,4 @@ require('./tests/UserService.test.js');
 // * CONTROLLERS (ROUTES)
 // **************************
 require('./tests/User.jwt.test');
+// require('./tests/User.passport.test');

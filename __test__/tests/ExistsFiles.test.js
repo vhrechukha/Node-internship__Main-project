@@ -12,6 +12,11 @@ describe('EXIST FILES', () => {
 
         done();
     });
+    it('Package-lock.json', (done) => {
+        expect(path.join(__dirname, '../../package-lock.json')).to.be.a.path();
+
+        done();
+    });
     it('CodeStyle', (done) => {
         expect(path.join(__dirname, '../../.eslintrc.json')).to.be.a.path();
 
