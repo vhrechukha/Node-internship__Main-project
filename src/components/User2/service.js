@@ -50,7 +50,6 @@ function generateRefreshToken(userEmail) {
  * @exports
  * @method decode
  * @param {string} token
- * @param {string} user
  * @summary decode token
  * @returns {Promise<void>}
  */
@@ -89,8 +88,8 @@ function findById(id) {
  * @summary update a user's profile
  * @returns {Promise<void>}
  */
-function updateById(_id, newProfile) {
-    return UserModel.updateOne({ _id }, newProfile).exec();
+function updateById(id, newProfile) {
+    return UserModel.updateOne({ id }, newProfile).exec();
 }
 
 /**
@@ -104,17 +103,6 @@ function deleteById(_id) {
     return UserModel.deleteOne({ _id }).exec();
 }
 
-/**
- * @exports
- * @method multiply
- * @param {a} number
- * @param {b} number
- * @returns {Number}
- */
-function multiply(a, b) {
-    return a + b;
-}
-
 module.exports = {
     findByEmail,
     generateAccessToken,
@@ -125,5 +113,4 @@ module.exports = {
     create,
     updateById,
     deleteById,
-    multiply,
 };

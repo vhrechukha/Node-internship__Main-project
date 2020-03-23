@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const UserComponent = require('.');
+const UserComponent = require('../User2');
 const isAuth = require('../../polices/isAuth');
 
 /**
@@ -27,7 +27,7 @@ router.post('/create', UserComponent.create);
  * @param {string} path -Express path
  * @param {callback} middleware - Express middleware
  */
-router.post('/login', isAuth, UserComponent.login);
+router.post('/login', UserComponent.login);
 
 /**
  * Route for logout user.

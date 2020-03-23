@@ -12,6 +12,7 @@ const { redisConnections } = require('../../config/connection');
  */
 async function create(req, res, next) {
     try {
+        console.log('create;');
         const { error } = UserValidation.entry(req.body);
 
         if (error) {
@@ -20,19 +21,9 @@ async function create(req, res, next) {
 
         const user = await UserService.create(req.body);
 
-        const accessToken = await UserService.generateAccessToken(user.id);
-        const refreshToken = await UserService.generateRefreshToken(user.id);
-
-        redisConnections.set(refreshToken, user.id);
-        redisConnections.expire(refreshToken, 604800);
-
         return res.status(200).json({
             result: `${user.id} registered.`,
             data: user,
-            tokens: {
-                AccessToken: accessToken,
-                RefreshToken: refreshToken,
-            },
         });
     } catch (error) {
         if (error instanceof ValidationError) {
@@ -60,7 +51,6 @@ async function create(req, res, next) {
  */
 async function login(req, res, next) {
     try {
-        console.log('LOGIN');
         const { error } = UserValidation.entry(req.body);
 
         if (error) {
@@ -69,22 +59,23 @@ async function login(req, res, next) {
 
         const user = await UserService.findByEmail(req.body.email);
 
-        console.log('Auth OK!');
+        if (req.body.password === user.password) {
+            const accessToken = await UserService.generateAccessToken(user.email);
+            const refreshToken = await UserService.generateRefreshToken(user.email);
 
-        const accessToken = await UserService.generateAccessToken(user.email);
-        const refreshToken = await UserService.generateRefreshToken(user.email);
+            redisConnections.set(refreshToken, user.id);
+            redisConnections.expire(refreshToken, 604800);
 
-        redisConnections.set(refreshToken, user.id);
-        redisConnections.expire(refreshToken, 604800);
-
-        return res.status(200).json({
-            result: `${user.id} log in.`,
-            data: user,
-            tokens: {
-                AccessToken: accessToken,
-                RefreshToken: refreshToken,
-            },
-        });
+            return res.status(200).json({
+                result: `${user.id} log in.`,
+                data: user,
+                tokens: {
+                    AccessToken: accessToken,
+                    RefreshToken: refreshToken,
+                },
+            });
+        }
+        throw error;
     } catch (error) {
         if (error instanceof ValidationError) {
             return res.status(422).json({
