@@ -3,7 +3,6 @@ const UserService = require('./service');
 const UserValidation = require('./validation');
 const ValidationError = require('../../error/ValidationError');
 
-
 /**
  * @function login
  * @param {express.Request} req

@@ -12,7 +12,6 @@ const { redisConnections } = require('../../config/connection');
  */
 async function create(req, res, next) {
     try {
-        console.log('create;');
         const { error } = UserValidation.entry(req.body);
 
         if (error) {
@@ -110,8 +109,6 @@ async function logout(req, res, next) {
         const refreshToken = req.header('refreshToken');
 
         if (!refreshToken) throw error;
-
-        console.log('LOGOUT');
 
         const user = await UserService.decode(refreshToken);
 
