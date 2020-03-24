@@ -6,10 +6,9 @@ require('./tests/ExistsFiles.test');
 // **********
 // * SERVICES
 // **********
-require('./tests/UserService.test.js');
+require('./tests/UserJwtService.test.js');
 
 // **************************
 // * CONTROLLERS (ROUTES)
 // **************************
 require('./tests/User.jwt.test');
-// require('./tests/User.passport.test');

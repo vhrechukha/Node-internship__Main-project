@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/main.css">
+    <title>USERS</title>
+</head>
+<body>
+  <div class="entry-user-form">
+    <div class="form">
+      <h1 class="title">Register</h1>
+      <form action="/v1/users/register" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="text" class="input-text" id="fullName" name="fullName" placeholder="fullname">
+        <input type="email" class="input-text" id="email" name="email" placeholder="email">
+        <input type="password" class="input-text" id="password" name="password" placeholder="password">
+        <button type="submit" class="button">Register</button>
+      </form>
+      <a class="button-redirect" href="/v1/users/login">I have an account</a>
+    </div>
+  </div>
+</body>
+</html>
+

@@ -6,6 +6,7 @@ const { expect } = chai;
 
 describe('UserComponent -> service', () => {
     let userId = '';
+    let refreshToken = '';
     it('UserComponent -> service -> findAll', (done) => {
         UtilService.findAll()
             .then((body) => {
@@ -61,5 +62,20 @@ describe('UserComponent -> service', () => {
                 done();
             })
             .catch(done);
+    });
+    it('UserComponent -> service -> generateacesstoken', (done) => {
+        const token = UtilService.generateAccessToken('New User@gmail.com');
+        expect(token).to.be.an('string');
+        done();
+    });
+    it('UserComponent -> service -> generaterefreshtoken', (done) => {
+        refreshToken = UtilService.generateRefreshToken('New User@gmail.com');
+        expect(refreshToken).to.be.an('string');
+        done();
+    });
+    it('UserComponent -> service -> decode', (done) => {
+        const decodeToken = UtilService.decode(refreshToken);
+        expect(decodeToken).to.be.an('object');
+        done();
     });
 });

@@ -27,13 +27,23 @@ router.get('/', csrfProtection, isAuth.checkAuthenticated, UserComponent.findAll
 
 /**
  * Route which open forms register/login for user
- * @name /v1/users/entry
+ * @name /v1/users/login
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.get('/entry', csrfProtection, isAuth.checkNotAuthenticated, UserComponent.entry);
+router.get('/login', csrfProtection, isAuth.checkNotAuthenticated, UserComponent.logIn);
+
+/**
+ * Route which open forms register/login for user
+ * @name /v1/users/signUp
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware
+ */
+router.get('/signUp', csrfProtection, isAuth.checkNotAuthenticated, UserComponent.signUp);
 
 /**
  * Route register for user.

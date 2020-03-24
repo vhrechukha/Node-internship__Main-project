@@ -5,13 +5,25 @@ const ValidationError = require('../../error/ValidationError');
 
 
 /**
- * @function entry
+ * @function login
  * @param {express.Request} req
  * @param {express.Response} res
  * @returns {Promise < void >}
  */
-function entry(req, res) {
-    return res.render('entry.ejs', {
+function logIn(req, res) {
+    return res.render('logIn.ejs', {
+        csrfToken: req.csrfToken(),
+    });
+}
+
+/**
+ * @function signUp
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @returns {Promise < void >}
+ */
+function signUp(req, res) {
+    return res.render('signUp.ejs', {
         csrfToken: req.csrfToken(),
     });
 }
@@ -58,7 +70,7 @@ async function register(req, res, next) {
         }
         await UserService.create(req.body);
 
-        return res.redirect('/v1/users/entry');
+        return res.redirect('/v1/users/logIn');
     } catch (error) {
         if (error instanceof ValidationError) {
             return res.status(422).json({
@@ -115,7 +127,7 @@ async function login(req, res, next) {
 async function logout(req, res, next) {
     try {
         req.logout();
-        return res.redirect('/v1/users/entry');
+        return res.redirect('/v1/users/logIn');
     } catch (error) {
         res.status(500).json({
             message: error.name,
@@ -127,7 +139,8 @@ async function logout(req, res, next) {
 }
 
 module.exports = {
-    entry,
+    logIn,
+    signUp,
     findAll,
     register,
     login,

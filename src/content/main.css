@@ -8,16 +8,21 @@ a, a:visited {
   color: #000;
 }
 
-p {
+.title, p {
   text-align: center;
   font-family: 'ZCOOL QingKe HuangYou', serif;
 }
 
 .create-user-form,
 .update-user-form,
-.delete-user-form {
+.delete-user-form,
+.entry-user-form {
   width: 360px;
   margin: auto;
+}
+
+.entry-user-form {
+  margin: 8% auto 8%;
 }
 
 .form {
@@ -62,6 +67,10 @@ p {
   border: 2px solid #fff;
 }
 
+.button-redirect {
+  font-family: 'ZCOOL QingKe HuangYou', serif;
+}
+
 .form-none {
   display: none;
 }
@@ -100,3 +109,4 @@ p {
   color: #fff;
   background-color: #1a1a1a;
 }
+
