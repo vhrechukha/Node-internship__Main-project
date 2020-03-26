@@ -47,16 +47,6 @@ router.get('/login', csrfProtection, isAuth.checkNotAuthenticated, UserComponent
 router.get('/signUp', csrfProtection, isAuth.checkNotAuthenticated, UserComponent.signUpPassport);
 
 /**
- * Route serving a user
- * @name /v1/users/:id
- * @function
- * @inner
- * @param {string} path - Express path
- * @param {callback} middleware - Express middleware.
- */
-router.get('/:id', csrfProtection, UserComponent.findByIdPassport);
-
-/**
  * Route serving a new user
  * @name /v1/users/create
  * @function

@@ -93,13 +93,13 @@ describe('UserComponent -> controller', () => {
         });
     });
 
-    /* describe('UserComponent -> controller -> /v2/users/', () => {
+    describe('UserComponent -> controller -> /v1/users/', () => {
         it('Get user with token [200]', (done) => {
             request(server)
                 .get('/v1/users/all')
                 .set('refreshtoken', refreshToken, 'Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(422)
+                .expect(200)
                 .then(({ body }) => {
                     console.log(body);
                     const expectBody = expect(body);
@@ -123,7 +123,7 @@ describe('UserComponent -> controller', () => {
                 })
                 .catch((err) => done(err));
         });
-    }); */
+    });
 
     describe('UserComponent -> controller -> /v1/users/Jwt/:id', () => {
         it('Find user with [200]', (done) => {
@@ -131,9 +131,8 @@ describe('UserComponent -> controller', () => {
                 .get(`/v1/users/Jwt/${userId}`)
                 .set('refreshtoken', refreshToken, 'Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(422)
+                .expect(200)
                 .then(({ body }) => {
-                    console.log(body);
                     const expectBody = expect(body);
                     expectBody.to.have.property('data').and.to.be.a('object');
 
@@ -146,9 +145,8 @@ describe('UserComponent -> controller', () => {
                 .get('/v1/users/Jwt/5e78f48586e4560a10d6d7ea')
                 .set('refreshtoken', refreshToken, 'Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(422)
+                .expect(200)
                 .then(({ body }) => {
-                    console.log(body);
                     const expectBody = expect(body);
                     expectBody.to.have.property('data').and.to.be.a('null');
 
@@ -175,7 +173,7 @@ describe('UserComponent -> controller', () => {
     describe('UserComponent -> controller -> /v2/users/update', () => {
         it('Update user [200]', (done) => {
             request(server)
-                .put('/v2/users/updateJwt')
+                .put('/v1/users/updateJwt')
                 .set('refreshtoken', refreshToken, 'Accept', 'application/json')
                 .send({ id: userId, email: 'Ntef@gmail.com' })
                 .expect('Content-Type', /json/)
@@ -190,7 +188,7 @@ describe('UserComponent -> controller', () => {
         });
         it('!Update user with bad params [422]', (done) => {
             request(server)
-                .put('/v2/users/updateJwt')
+                .put('/v1/users/updateJwt')
                 .set('refreshtoken', refreshToken, 'Accept', 'application/json')
                 .send({ id: '', email: '' })
                 .expect('Content-Type', /json/)
@@ -205,7 +203,7 @@ describe('UserComponent -> controller', () => {
         });
         it('!Update user without token [406]', (done) => {
             request(server)
-                .put('/v2/users/updateJwt')
+                .put('/v1/users/updateJwt')
                 .set('refreshtoken', '', 'Accept', 'application/json')
                 .send({ id: userId, email: 'Ntef@gmail.com' })
                 .expect('Content-Type', /json/)
@@ -223,7 +221,7 @@ describe('UserComponent -> controller', () => {
     describe('UserComponent -> controller -> /v2/users/logout', () => {
         it('User logout [200]', (done) => {
             request(server)
-                .get('/v2/users/logout')
+                .get('/v1/auth/logoutJwt')
                 .set('refreshtoken', refreshToken, 'Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -237,7 +235,7 @@ describe('UserComponent -> controller', () => {
         });
         it('User logout without token [406]', (done) => {
             request(server)
-                .get('/v2/users/logout')
+                .get('/v1/auth/logoutJwt')
                 .set('refreshtoken', '', 'Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(406)
