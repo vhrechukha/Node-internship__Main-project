@@ -47,6 +47,46 @@ router.get('/login', csrfProtection, isAuth.checkNotAuthenticated, UserComponent
 router.get('/signUp', csrfProtection, isAuth.checkNotAuthenticated, UserComponent.signUpPassport);
 
 /**
+ * Route serving a user
+ * @name /v1/users/:id
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router.get('/:id', csrfProtection, UserComponent.findByIdPassport);
+
+/**
+ * Route serving a new user
+ * @name /v1/users/create
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware
+ */
+router.post('/create', csrfProtection, UserComponent.createPassport);
+
+/**
+ * Route serving a new user
+ * @name /v1/users/update
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware
+ */
+router.put('/update', csrfProtection, UserComponent.updateByIdPassport);
+
+/**
+ * Route serving a new user
+ * @name /v1/users/delete
+ * @function
+ * @inner
+ * @param {string} path -Express path
+ * @param {callback} middleware - Express middleware
+ */
+router.delete('/delete', csrfProtection, UserComponent.deleteByIdPassport);
+
+/**
  * JWT route serving list of users.
  * @name /v1/users
  * @function
@@ -64,7 +104,7 @@ router.get('/all', isAuthJwt, UserComponent.findAllJwt);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/:id', isAuthJwt, UserComponent.findByIdJwt);
+router.get('/Jwt/:id', isAuthJwt, UserComponent.findByIdJwt);
 
 /**
  * JWT route for update user.
@@ -74,7 +114,7 @@ router.get('/:id', isAuthJwt, UserComponent.findByIdJwt);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.put('/update', isAuthJwt, UserComponent.updateByIdJwt);
+router.put('/updateJwt', isAuthJwt, UserComponent.updateByIdJwt);
 
 /**
  * JWT route for delete user.
@@ -84,6 +124,6 @@ router.put('/update', isAuthJwt, UserComponent.updateByIdJwt);
  * @param {string} path -Express path
  * @param {callback} middleware - Express middleware
  */
-router.delete('/delete', isAuthJwt, UserComponent.deleteByIdJwt);
+router.delete('/deleteJwt', isAuthJwt, UserComponent.deleteByIdJwt);
 
 module.exports = router;

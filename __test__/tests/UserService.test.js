@@ -1,6 +1,6 @@
 const chai = require('chai');
 
-const UtilService = require('../../src/components/User2/service');
+const UtilService = require('../../src/components/User/service');
 
 const { expect } = chai;
 

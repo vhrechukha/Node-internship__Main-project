@@ -238,7 +238,7 @@ async function findByIdJwt(req, res, next) {
             throw new ValidationError(error.details);
         }
 
-        const user = await UserService.findById(req.params.id);
+        const user = await UserService.findByIdJwt(req.params.id);
 
         return res.status(200).json({
             data: user,
@@ -275,7 +275,7 @@ async function updateByIdJwt(req, res, next) {
             throw new ValidationError(error.details);
         }
 
-        const updatedUser = await UserService.updateById(req.body.id, req.body);
+        const updatedUser = await UserService.updateByIdJwt(req.body.id, req.body);
 
         return res.status(200).json({
             data: updatedUser,
@@ -312,7 +312,7 @@ async function deleteByIdJwt(req, res, next) {
             throw new ValidationError(error.details);
         }
 
-        const deletedUser = await UserService.deleteById(req.body.id);
+        const deletedUser = await UserService.deleteByIdJwt(req.body.id);
 
         return res.status(200).json({
             data: deletedUser,

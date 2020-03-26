@@ -12,9 +12,9 @@ describe('UserComponent -> controller', () => {
     describe('UserComponent -> controller -> /v2/users/create', () => {
         it('Create new user with [200]', (done) => {
             request(server)
-                .post('/v2/users/create')
+                .post('/v1/auth/createJWT')
                 .set('Accept', 'application/json')
-                .send({ email: 'Nt1ef@gmail.com', password: 'Zodiac' })
+                .send({ email: 'Ntf1ef@gmail.com', password: 'Zodiac' })
                 .expect('Content-Type', /json/)
                 .expect(200)
                 .then(({ body }) => {
@@ -27,7 +27,7 @@ describe('UserComponent -> controller', () => {
         });
         it('!Create user with bad params [422]', (done) => {
             request(server)
-                .post('/v2/users/create')
+                .post('/v1/auth/createJwt')
                 .set('Accept', 'application/json')
                 .send({ email: '', password: '' })
                 .expect('Content-Type', /json/)
@@ -45,14 +45,15 @@ describe('UserComponent -> controller', () => {
     describe('UserComponent -> controller -> /v2/users/login', () => {
         it('Login user [200]', (done) => {
             request(server)
-                .post('/v2/users/login')
+                .post('/v1/auth/loginJwt')
                 .set('Accept', 'application/json')
-                .send({ email: 'Nt1ef@gmail.com', password: 'Zodiac' })
+                .send({ email: 'Ntf1ef@gmail.com', password: 'Zodiac' })
                 .expect('Content-Type', /json/)
                 .expect(200)
                 .then(({ body }) => {
                     const expectBody = expect(body);
                     refreshToken = body.tokens.RefreshToken;
+                    console.log(refreshToken);
                     userId = body.data._id;
                     expectBody.to.have.property('data').and.to.be.a('object');
 
@@ -62,7 +63,7 @@ describe('UserComponent -> controller', () => {
         });
         it('Login user with wrong params [200]', (done) => {
             request(server)
-                .post('/v2/users/login')
+                .post('/v1/auth/loginJwt')
                 .set('Accept', 'application/json')
                 .send({ email: 'Nt1ef@gmail.com', password: '111' })
                 .expect('Content-Type', /json/)
@@ -77,7 +78,7 @@ describe('UserComponent -> controller', () => {
         });
         it('Login user without any params [422]', (done) => {
             request(server)
-                .post('/v2/users/login')
+                .post('/v1/auth/loginJwt')
                 .set('Accept', 'application/json')
                 .send({ email: '', password: '' })
                 .expect('Content-Type', /json/)
@@ -92,14 +93,15 @@ describe('UserComponent -> controller', () => {
         });
     });
 
-    describe('UserComponent -> controller -> /v2/users/', () => {
+    /* describe('UserComponent -> controller -> /v2/users/', () => {
         it('Get user with token [200]', (done) => {
             request(server)
-                .get('/v2/users/')
+                .get('/v1/users/all')
                 .set('refreshtoken', refreshToken, 'Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(200)
+                .expect(422)
                 .then(({ body }) => {
+                    console.log(body);
                     const expectBody = expect(body);
                     expectBody.to.have.property('data').and.to.be.a('array');
 
@@ -109,7 +111,7 @@ describe('UserComponent -> controller', () => {
         });
         it('!Get user with bad token [406]', (done) => {
             request(server)
-                .get('/v2/users/')
+                .get('/v1/users/all')
                 .set('refreshtoken', '', 'Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(406)
@@ -121,16 +123,17 @@ describe('UserComponent -> controller', () => {
                 })
                 .catch((err) => done(err));
         });
-    });
+    }); */
 
-    describe('UserComponent -> controller -> /v2/users/:id', () => {
+    describe('UserComponent -> controller -> /v1/users/Jwt/:id', () => {
         it('Find user with [200]', (done) => {
             request(server)
-                .get(`/v2/users/${userId}`)
+                .get(`/v1/users/Jwt/${userId}`)
                 .set('refreshtoken', refreshToken, 'Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(200)
+                .expect(422)
                 .then(({ body }) => {
+                    console.log(body);
                     const expectBody = expect(body);
                     expectBody.to.have.property('data').and.to.be.a('object');
 
@@ -140,11 +143,12 @@ describe('UserComponent -> controller', () => {
         });
         it('!Find user with bad param [200]', (done) => {
             request(server)
-                .get('/v2/users/5e78f48586e4560a10d6d7ea')
+                .get('/v1/users/Jwt/5e78f48586e4560a10d6d7ea')
                 .set('refreshtoken', refreshToken, 'Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(200)
+                .expect(422)
                 .then(({ body }) => {
+                    console.log(body);
                     const expectBody = expect(body);
                     expectBody.to.have.property('data').and.to.be.a('null');
 
@@ -154,7 +158,7 @@ describe('UserComponent -> controller', () => {
         });
         it('!Find user without token [406]', (done) => {
             request(server)
-                .get('/v2/users/5e78f48586e4560a10d6d7ea')
+                .get('/v1/users/Jwt/5e78f48586e4560a10d6d7ea')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(406)
@@ -171,7 +175,7 @@ describe('UserComponent -> controller', () => {
     describe('UserComponent -> controller -> /v2/users/update', () => {
         it('Update user [200]', (done) => {
             request(server)
-                .put('/v2/users/update')
+                .put('/v2/users/updateJwt')
                 .set('refreshtoken', refreshToken, 'Accept', 'application/json')
                 .send({ id: userId, email: 'Ntef@gmail.com' })
                 .expect('Content-Type', /json/)
@@ -186,7 +190,7 @@ describe('UserComponent -> controller', () => {
         });
         it('!Update user with bad params [422]', (done) => {
             request(server)
-                .put('/v2/users/update')
+                .put('/v2/users/updateJwt')
                 .set('refreshtoken', refreshToken, 'Accept', 'application/json')
                 .send({ id: '', email: '' })
                 .expect('Content-Type', /json/)
@@ -201,7 +205,7 @@ describe('UserComponent -> controller', () => {
         });
         it('!Update user without token [406]', (done) => {
             request(server)
-                .put('/v2/users/update')
+                .put('/v2/users/updateJwt')
                 .set('refreshtoken', '', 'Accept', 'application/json')
                 .send({ id: userId, email: 'Ntef@gmail.com' })
                 .expect('Content-Type', /json/)
@@ -250,7 +254,7 @@ describe('UserComponent -> controller', () => {
     describe('UserComponent -> controller -> /v2/users/delete', () => {
         it('User delete [200]', (done) => {
             request(server)
-                .del('/v2/users/delete')
+                .del('/v1/users/deleteJwt')
                 .set('refreshtoken', refreshToken, 'Accept', 'application/json')
                 .send({ id: userId })
                 .expect('Content-Type', /json/)
@@ -265,7 +269,7 @@ describe('UserComponent -> controller', () => {
         });
         it('User delete with bad param [422]', (done) => {
             request(server)
-                .del('/v2/users/delete')
+                .del('/v1/users/deleteJwt')
                 .set('refreshtoken', refreshToken, 'Accept', 'application/json')
                 .send({ id: '' })
                 .expect('Content-Type', /json/)
@@ -280,7 +284,7 @@ describe('UserComponent -> controller', () => {
         });
         it('User delete without token [406]', (done) => {
             request(server)
-                .del('/v2/users/delete')
+                .del('/v1/users/deleteJwt')
                 .set('refreshtoken', '', 'Accept', 'application/json')
                 .send({ id: userId })
                 .expect('Content-Type', /json/)
