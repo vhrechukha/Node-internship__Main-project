@@ -16,6 +16,9 @@ class UserValidation extends Validation {
             .object({
                 id: this.Joi
                     .objectId(),
+                _csrf: this.Joi
+                    .string()
+                    .required(),
             })
             .validate(data);
     }
@@ -62,6 +65,9 @@ class UserValidation extends Validation {
                     .min(1)
                     .max(30)
                     .required(),
+                _csrf: this.Joi
+                    .string()
+                    .required(),
             })
             .validate(profile);
     }
@@ -76,10 +82,13 @@ class UserValidation extends Validation {
         return this.Joi
             .object({
                 id: this.Joi.objectId(),
-                email: this.Joi
+                fullName: this.Joi
                     .string()
                     .min(1)
                     .max(30)
+                    .required(),
+                _csrf: this.Joi
+                    .string()
                     .required(),
             })
             .validate(data);
@@ -95,6 +104,9 @@ class UserValidation extends Validation {
             .object({
                 id: this.Joi
                     .objectId(),
+                _csrf: this.Joi
+                    .string()
+                    .required(),
             })
             .validate(data);
     }

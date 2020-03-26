@@ -7,6 +7,7 @@ const UserComponent = require('../User');
 const csrfProtection = csrf({ cookie: true });
 
 const isAuth = require('../../polices/isAuthPassport');
+const isAuthJwt = require('../../polices/isAuth');
 
 /**
  * Express router to mount user related functions on.
@@ -16,63 +17,73 @@ const isAuth = require('../../polices/isAuthPassport');
 const router = Router();
 
 /**
- * Route serving list of users.
+ * PASSPORT route serving list of users.
  * @name /v1/users
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/', csrfProtection, isAuth.checkAuthenticated, UserComponent.findAll);
+router.get('/', csrfProtection, isAuth.checkAuthenticated, UserComponent.findAllPassport);
 
 /**
- * Route which open forms register/login for user
+ * PASSPORT route which open forms register/login for user
  * @name /v1/users/login
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.get('/login', csrfProtection, isAuth.checkNotAuthenticated, UserComponent.logIn);
+router.get('/login', csrfProtection, isAuth.checkNotAuthenticated, UserComponent.logInPassport);
 
 /**
- * Route which open forms register/login for user
+ * PASSPORT route which open forms register/login for user
  * @name /v1/users/signUp
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.get('/signUp', csrfProtection, isAuth.checkNotAuthenticated, UserComponent.signUp);
+router.get('/signUp', csrfProtection, isAuth.checkNotAuthenticated, UserComponent.signUpPassport);
 
 /**
- * Route register for user.
- * @name /v1/users/register
+ * JWT route serving list of users.
+ * @name /v1/users
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router.get('/all', isAuthJwt, UserComponent.findAllJwt);
+
+/**
+ * JWT route for find user by id.
+ * @name /v1/users/:id
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router.get('/:id', isAuthJwt, UserComponent.findByIdJwt);
+
+/**
+ * JWT route for update user.
+ * @name /v1/users/update
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.post('/register', csrfProtection, isAuth.checkNotAuthenticated, UserComponent.register);
+router.put('/update', isAuthJwt, UserComponent.updateByIdJwt);
 
 /**
- * Route login for user.
- * @name /v1/users/login
+ * JWT route for delete user.
+ * @name /v1/users/delete
  * @function
  * @inner
- * @param {string} path - Express path
+ * @param {string} path -Express path
  * @param {callback} middleware - Express middleware
  */
-router.post('/login', csrfProtection, isAuth.checkNotAuthenticated, UserComponent.login);
-
-/**
- * Route logout for user.
- * @name /v1/users/logout
- * @function
- * @inner
- * @param {string} path - Express path
- * @param {callback} middleware - Express middleware
- */
-router.get('/logout', csrfProtection, isAuth.checkAuthenticated, UserComponent.logout);
+router.delete('/delete', isAuthJwt, UserComponent.deleteByIdJwt);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');

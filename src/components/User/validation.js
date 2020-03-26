@@ -70,7 +70,7 @@ class UserValidation extends Validation {
                     .required(),
                 _csrf: this.Joi
                     .string()
-                    .required()
+                    .required(),
             })
             .validate(data);
     }
@@ -87,7 +87,7 @@ class UserValidation extends Validation {
                     .objectId(),
                 _csrf: this.Joi
                     .string()
-                    .required()
+                    .required(),
             })
             .validate(data);
     }

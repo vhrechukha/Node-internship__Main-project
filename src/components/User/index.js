@@ -1,4 +1,3 @@
-const passport = require('passport');
 const UserService = require('./service');
 const UserValidation = require('./validation');
 const ValidationError = require('../../error/ValidationError');
@@ -9,7 +8,7 @@ const ValidationError = require('../../error/ValidationError');
  * @param {express.Response} res
  * @returns {Promise < void >}
  */
-function logIn(req, res) {
+function logInPassport(req, res) {
     return res.render('logIn.ejs', {
         csrfToken: req.csrfToken(),
     });
@@ -21,7 +20,7 @@ function logIn(req, res) {
  * @param {express.Response} res
  * @returns {Promise < void >}
  */
-function signUp(req, res) {
+function signUpPassport(req, res) {
     return res.render('signUp.ejs', {
         csrfToken: req.csrfToken(),
     });
@@ -34,7 +33,7 @@ function signUp(req, res) {
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function findAll(req, res, next) {
+async function findAllPassport(req, res, next) {
     try {
         const users = await UserService.findAll();
 
@@ -54,13 +53,51 @@ async function findAll(req, res, next) {
 }
 
 /**
- * @function register
+ * @function
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function register(req, res, next) {
+async function findByIdPassport(req, res, next) {
+    try {
+        const { error } = UserValidation.findById(req.params);
+
+        if (error) {
+            throw new ValidationError(error.details);
+        }
+
+        const user = await UserService.findById(req.params.id);
+
+        return res.status(200).json({
+            data: user,
+            CSRFtoken: req.csrfToken(),
+        });
+    } catch (error) {
+        if (error instanceof ValidationError) {
+            return res.status(422).json({
+                error: error.name,
+                details: error.message,
+            });
+        }
+
+        res.status(500).json({
+            message: error.name,
+            details: error.message,
+        });
+
+        return next(error);
+    }
+}
+
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise < void >}
+ */
+async function createPassport(req, res, next) {
     try {
         const { error } = UserValidation.create(req.body);
 
@@ -69,7 +106,47 @@ async function register(req, res, next) {
         }
         await UserService.create(req.body);
 
-        return res.redirect('/v1/users/logIn');
+        return res.redirect('/v1/users');
+    } catch (error) {
+        if (error instanceof ValidationError) {
+            return res.status(422).json({
+                message: error.name,
+                details: error.message,
+            });
+        }
+
+        if (error.name === 'MongoError' && error.code === 11000) {
+            res.render('users', { errormessage: req.flash('deletePostSuccessMsg') });
+            // return res.redirect('/v1/users', req.flash('error', 'Error messoge'));
+        }
+
+        res.status(500).json({
+            message: error.name,
+            details: error.message,
+        });
+
+        return next(error);
+    }
+}
+
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise<void>}
+ */
+async function updateByIdPassport(req, res, next) {
+    try {
+        const { error } = UserValidation.updateById(req.body);
+
+        if (error) {
+            throw new ValidationError(error.details);
+        }
+
+        await UserService.updateById(req.body.id, req.body);
+
+        return res.redirect('/v1/users');
     } catch (error) {
         if (error instanceof ValidationError) {
             return res.status(422).json({
@@ -88,25 +165,31 @@ async function register(req, res, next) {
 }
 
 /**
- * @function login
+ * @function
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
- * @returns {Promise < void >}
+ * @returns {Promise<void>}
  */
-async function login(req, res, next) {
+async function deleteByIdPassport(req, res, next) {
     try {
-        await passport.authenticate('local', { name: req.body.email, password: req.body.password }, (err, user, info) => {
-            if (err) return next(err);
-            if (user) {
-                // eslint-disable-next-line no-shadow
-                req.logIn(user, (err) => {
-                    if (err) return next(err);
-                    return res.redirect('/v1/users');
-                });
-            }
-        })(req, res, next);
+        const { error } = UserValidation.deleteById(req.body);
+
+        if (error) {
+            throw new ValidationError(error.details);
+        }
+
+        await UserService.deleteById(req.body.id);
+
+        return res.redirect('/v1/users');
     } catch (error) {
+        if (error instanceof ValidationError) {
+            return res.status(422).json({
+                message: error.name,
+                details: error.message,
+            });
+        }
+
         res.status(500).json({
             message: error.name,
             details: error.message,
@@ -117,17 +200,131 @@ async function login(req, res, next) {
 }
 
 /**
- * @function logour
+ * @function
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function logout(req, res, next) {
+async function findAllJwt(req, res, next) {
     try {
-        req.logout();
-        return res.redirect('/v1/users/logIn');
+        const users = await UserService.findAll();
+
+        res.status(200).json({
+            data: users,
+        });
     } catch (error) {
+        res.status(500).json({
+            error: error.message,
+            details: null,
+        });
+
+        next(error);
+    }
+}
+
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise < void >}
+ */
+async function findByIdJwt(req, res, next) {
+    try {
+        const { error } = UserValidation.findById(req.params);
+
+        if (error) {
+            throw new ValidationError(error.details);
+        }
+
+        const user = await UserService.findById(req.params.id);
+
+        return res.status(200).json({
+            data: user,
+        });
+    } catch (error) {
+        if (error instanceof ValidationError) {
+            return res.status(422).json({
+                error: error.name,
+                details: error.message,
+            });
+        }
+
+        res.status(500).json({
+            message: error.name,
+            details: error.message,
+        });
+
+        return next(error);
+    }
+}
+
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise<void>}
+ */
+async function updateByIdJwt(req, res, next) {
+    try {
+        const { error } = UserValidation.updateById(req.body);
+
+        if (error) {
+            throw new ValidationError(error.details);
+        }
+
+        const updatedUser = await UserService.updateById(req.body.id, req.body);
+
+        return res.status(200).json({
+            data: updatedUser,
+        });
+    } catch (error) {
+        if (error instanceof ValidationError) {
+            return res.status(422).json({
+                message: error.name,
+                details: error.message,
+            });
+        }
+
+        res.status(500).json({
+            message: error.name,
+            details: error.message,
+        });
+
+        return next(error);
+    }
+}
+
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise<void>}
+ */
+async function deleteByIdJwt(req, res, next) {
+    try {
+        const { error } = UserValidation.deleteById(req.body);
+
+        if (error) {
+            throw new ValidationError(error.details);
+        }
+
+        const deletedUser = await UserService.deleteById(req.body.id);
+
+        return res.status(200).json({
+            data: deletedUser,
+        });
+    } catch (error) {
+        if (error instanceof ValidationError) {
+            return res.status(422).json({
+                message: error.name,
+                details: error.message,
+            });
+        }
+
         res.status(500).json({
             message: error.name,
             details: error.message,
@@ -138,10 +335,15 @@ async function logout(req, res, next) {
 }
 
 module.exports = {
-    logIn,
-    signUp,
-    findAll,
-    register,
-    login,
-    logout,
+    logInPassport,
+    signUpPassport,
+    findAllPassport,
+    findByIdPassport,
+    createPassport,
+    updateByIdPassport,
+    deleteByIdPassport,
+    findAllJwt,
+    findByIdJwt,
+    updateByIdJwt,
+    deleteByIdJwt,
 };

@@ -11,7 +11,7 @@
   <div class="entry-user-form">
     <div class="form">
     <h1 class="title">Login</h1>
-    <form action="/v1/users/login" method="POST">
+    <form action="/v1/auth/login" method="POST">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <input class="input-text" type="email" id="email" name="email" placeholder="email">
       <input class="input-text" type="password" id="password" name="password" placeholder="password">
