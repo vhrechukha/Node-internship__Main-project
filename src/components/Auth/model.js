@@ -1,7 +1,7 @@
 const { Schema } = require('mongoose');
 const { mongoDBConnections } = require('../../config/connection');
 
-const Staff2Schema = new Schema(
+const StaffSchema = new Schema(
     {
         fullName: {
             type: String,
@@ -17,9 +17,9 @@ const Staff2Schema = new Schema(
         },
     },
     {
-        collection: 'staff2',
+        collection: 'staff',
         versionKey: false,
     },
 );
 
-module.exports = mongoDBConnections.model('Staff2Schema', Staff2Schema);
+module.exports = mongoDBConnections.model('StaffSchema', StaffSchema);

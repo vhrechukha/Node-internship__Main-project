@@ -47,7 +47,9 @@
     <p><% if ( errormessage.length > 0 ) { %>
           <%= error %>
         <% } %></p>
-    <a method="GET" href="/v1/auth/logout">Logout</a>
+    <div class="logout">
+      <a method="GET" href="/v1/auth/logout">Logout</a>
+    </div>
     <table class="user-table">
       <tr>
         <th>#</th>

@@ -110,3 +110,10 @@ a, a:visited {
   background-color: #1a1a1a;
 }
 
+.logout {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+  font-family: 'ZCOOL QingKe HuangYou', serif;
+}
+

@@ -1,5 +1,5 @@
 const LocalStrategy = require('passport-local').Strategy;
-const UserModel = require('../components/User/model');
+const StaffModel = require('../components/Auth/model');
 
 function initialize(passport) {
     console.log('Passport connected!');
@@ -8,7 +8,7 @@ function initialize(passport) {
         usernameField: 'email',
         passwordField: 'password',
     }, (email, password, done) => {
-        UserModel.findOne({ email }, (err, user) => {
+        StaffModel.findOne({ email }, (err, user) => {
             if (err) return done(err);
 
             if (!user) {

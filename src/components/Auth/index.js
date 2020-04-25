@@ -48,10 +48,9 @@ async function registerPassport(req, res, next) {
 async function loginPassport(req, res, next) {
     try {
         // eslint-disable-next-line consistent-return
-        return passport.authenticate('local', { name: req.body.email, password: req.body.password }, (err, user) => {
+        return passport.authenticate('local', { name: req.body.email, password: req.body.password }, (err, user, info) => {
             if (err) return next(err);
             if (user) {
-                console.log('user');
                 return req.logIn(user, (err) => {
                     if (err) return next(err);
                     return res.redirect('/v1/users');
@@ -59,7 +58,7 @@ async function loginPassport(req, res, next) {
             }
             if (!user) {
                 res.render('logIn.ejs', {
-                    message: 'Chck your login or password',
+                    message: info.message,
                     csrfToken: req.csrfToken(),
                 });
             }

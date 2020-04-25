@@ -1,38 +1,21 @@
-### Task
-```
-   https://drive.google.com/drive/folders/1yQd6eFhnbPAmuuFqaMJYszNBMXwpNtfx?usp=sharing
+# Task
+
+Create table with users in which you can create, update, delete, find ones. Use passport authentication and jwt to get access to this table. Use ejs.
+
+## Review 
+
+![Recordit GIF](http://g.recordit.co/Oyvz5cBKre.gif)
+
+## Installation
+
+```sh
+git clone https://github.com/crzdvl/Node-internship__Main-project.git
 ```
 
-### Find User
-```
-   curl --location --request GET 'localhost:3000/v1/users'
-```
+## Development setup
 
-### Create User
-```
-   curl --location --request POST 'localhost:3000/v1/users' \
-   --header 'Content-Type: application/json' \
-   --data-raw '{
-      "email": "test@gmail.com",
-      "fullName": "Wow Yay"
-   }'
-```
-
-### Update User
-```
-   curl --location --request PUT 'localhost:3000/v1/users' \
-   --header 'Content-Type: application/json' \
-   --data-raw '{
-      "id": "5e50265429fbb59255fb8428",
-      "fullName": "Yay Foo"
-   }'
-```
-
-### Delete User
-```
-   curl --location --request DELETE 'localhost:3000/v1/users' \
-   --header 'Content-Type: application/json' \
-   --data-raw '{
-      "id": "5e502541bb617386c48f6a8c"
-   }'
+```sh
+npm i
+npm start 
+npm test
 ```
