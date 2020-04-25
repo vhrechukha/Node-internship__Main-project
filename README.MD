@@ -1,4 +1,4 @@
-# Task
+# Task :panda_face:
 
 Create table with users in which you can create, update, delete, find ones. Use passport authentication and jwt to get access to this table. Use ejs.
 
