@@ -84,6 +84,6 @@ router.get('/logoutJWT', isAuthJwt, UserComponent.logoutJwt);
  * @param {string} path -Express path
  * @param {callback} middleware - Express middleware
  */
-router.post('/continuationsession', isAuthJwt, UserComponent.updateConnectionJwt);
+router.post('/continuationsessionJwt', isAuthJwt, UserComponent.updateConnectionJwt);
 
 module.exports = router;

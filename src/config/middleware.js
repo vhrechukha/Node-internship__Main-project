@@ -1,13 +1,13 @@
 /* eslint-disable global-require */
-const bodyParser = require('body-parser');
-const compression = require('compression');
-const cookieParser = require('cookie-parser');
-const methodOverride = require('method-override');
 const cors = require('cors');
 const helmet = require('helmet');
-const passport = require('passport');
-const session = require('express-session');
 const express = require('express');
+const passport = require('passport');
+const bodyParser = require('body-parser');
+const compression = require('compression');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const methodOverride = require('method-override');
 
 module.exports = {
     /**

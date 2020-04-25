@@ -11,6 +11,9 @@
   <div class="entry-user-form">
     <div class="form">
     <h1 class="title">Login</h1>
+    <% if(message){ %>
+      <p><%= message %></p>
+    <% } %>
     <form action="/v1/auth/login" method="POST">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <input class="input-text" type="email" id="email" name="email" placeholder="email">

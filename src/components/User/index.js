@@ -3,19 +3,20 @@ const UserValidation = require('./validation');
 const ValidationError = require('../../error/ValidationError');
 
 /**
- * @function login
+ * @function logInPassport
  * @param {express.Request} req
  * @param {express.Response} res
  * @returns {Promise < void >}
  */
 function logInPassport(req, res) {
     return res.render('logIn.ejs', {
+        message: '',
         csrfToken: req.csrfToken(),
     });
 }
 
 /**
- * @function signUp
+ * @function signUpPassport
  * @param {express.Request} req
  * @param {express.Response} res
  * @returns {Promise < void >}
@@ -27,13 +28,13 @@ function signUpPassport(req, res) {
 }
 
 /**
- * @function findAll
+ * @function findAllPassport
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function findAllPassport(req, res, next) {
+async function findAllPassport(req, res) {
     try {
         const users = await UserService.findAll();
 
@@ -43,17 +44,15 @@ async function findAllPassport(req, res, next) {
             csrfToken: req.csrfToken(),
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             error: error.message,
             details: null,
         });
-
-        next(error);
     }
 }
 
 /**
- * @function
+ * @function findByIdPassport
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -91,7 +90,7 @@ async function findByIdPassport(req, res, next) {
 }
 
 /**
- * @function
+ * @function createPassport
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -99,6 +98,7 @@ async function findByIdPassport(req, res, next) {
  */
 async function createPassport(req, res, next) {
     try {
+        console.log(req.body, 'req.body');
         const { error } = UserValidation.create(req.body);
 
         if (error) {
@@ -130,7 +130,7 @@ async function createPassport(req, res, next) {
 }
 
 /**
- * @function
+ * @function updateByIdPassport
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -165,7 +165,7 @@ async function updateByIdPassport(req, res, next) {
 }
 
 /**
- * @function
+ * @function deleteByIdPassport
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -200,7 +200,7 @@ async function deleteByIdPassport(req, res, next) {
 }
 
 /**
- * @function
+ * @function findAllJwt
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -224,7 +224,7 @@ async function findAllJwt(req, res, next) {
 }
 
 /**
- * @function
+ * @function findByIdJwt
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -261,7 +261,7 @@ async function findByIdJwt(req, res, next) {
 }
 
 /**
- * @function
+ * @function updateByIdJwt
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -298,7 +298,7 @@ async function updateByIdJwt(req, res, next) {
 }
 
 /**
- * @function
+ * @function deleteByIdJwt
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next

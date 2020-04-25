@@ -53,7 +53,7 @@ describe('UserComponent -> controller', () => {
                 .then(({ body }) => {
                     const expectBody = expect(body);
                     refreshToken = body.tokens.RefreshToken;
-                    console.log(refreshToken);
+                    // eslint-disable-next-line no-underscore-dangle
                     userId = body.data._id;
                     expectBody.to.have.property('data').and.to.be.a('object');
 
@@ -101,7 +101,6 @@ describe('UserComponent -> controller', () => {
                 .expect('Content-Type', /json/)
                 .expect(200)
                 .then(({ body }) => {
-                    console.log(body);
                     const expectBody = expect(body);
                     expectBody.to.have.property('data').and.to.be.a('array');
 

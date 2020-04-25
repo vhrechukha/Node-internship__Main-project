@@ -16,6 +16,7 @@
         "strict": 0,
         "no-var": "error",
         "no-console": 0,
-        "no-fallthrough": 0
+        "no-fallthrough": 0,
+        "no-shadow": 0
     }
 }

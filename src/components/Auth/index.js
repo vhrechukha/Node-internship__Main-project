@@ -5,7 +5,7 @@ const ValidationError = require('../../error/ValidationError');
 const { redisConnections } = require('../../config/connection');
 
 /**
- * @function register
+ * @function registerPassport
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -39,7 +39,7 @@ async function registerPassport(req, res, next) {
 }
 
 /**
- * @function login
+ * @function loginPassport
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -47,13 +47,20 @@ async function registerPassport(req, res, next) {
  */
 async function loginPassport(req, res, next) {
     try {
-        await passport.authenticate('local', { name: req.body.email, password: req.body.password }, (err, user, info) => {
+        // eslint-disable-next-line consistent-return
+        return passport.authenticate('local', { name: req.body.email, password: req.body.password }, (err, user) => {
             if (err) return next(err);
             if (user) {
-                // eslint-disable-next-line no-shadow
-                req.logIn(user, (err) => {
+                console.log('user');
+                return req.logIn(user, (err) => {
                     if (err) return next(err);
                     return res.redirect('/v1/users');
+                });
+            }
+            if (!user) {
+                res.render('logIn.ejs', {
+                    message: 'Chck your login or password',
+                    csrfToken: req.csrfToken(),
                 });
             }
         })(req, res, next);
@@ -68,7 +75,7 @@ async function loginPassport(req, res, next) {
 }
 
 /**
- * @function logour
+ * @function logoutPassport
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -89,7 +96,7 @@ async function logoutPassport(req, res, next) {
 }
 
 /**
- * @function
+ * @function createJwt
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -128,7 +135,7 @@ async function createJwt(req, res, next) {
 }
 
 /**
- * @function
+ * @function loginJwt
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -183,7 +190,7 @@ async function loginJwt(req, res, next) {
 }
 
 /**
- * @function
+ * @function logoutJwt
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -193,7 +200,7 @@ async function logoutJwt(req, res, next) {
     try {
         const refreshToken = req.header('refreshToken');
 
-        if (!refreshToken) throw error;
+        if (!refreshToken) return res.redirect('/v1/users');
 
         const user = await UserService.decode(refreshToken);
 
@@ -213,7 +220,7 @@ async function logoutJwt(req, res, next) {
 }
 
 /**
- * @function
+ * @function updateConnectionJwt
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -223,7 +230,7 @@ async function updateConnectionJwt(req, res, next) {
     try {
         const oldRefreshToken = req.header('refreshToken');
 
-        if (!oldRefreshToken) throw error;
+        if (!oldRefreshToken) return res.redirect('/v1/users');
 
         const user = await UserService.decode(oldRefreshToken);
         console.log(user);
